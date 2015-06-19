@@ -392,7 +392,7 @@ function format_field_value($field, $row)
 										if($value!='')
 										{
 											$valueArr = explode('/', $value);	
-											$value = date('d/m/Y', mktime(0,0,0,$valueArr[1], $valueArr[0], $valueArr[2]));
+											$value = date('m/d/Y', mktime(0,0,0,$valueArr[1], $valueArr[0], $valueArr[2]));
 										}
 										break;						
 			}
