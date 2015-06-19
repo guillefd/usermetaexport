@@ -115,6 +115,8 @@ $fieldsToExport = [
 						'posicion'=>['lowercase','capitalize'],
 						'user_email'=>['fillblankemailaddress'],
 						'lugar_de_trabajo'=>['setLugardeTrabajo'],
+						'fecha_de_nacimiento'=>['format_date'],
+						'fecha_de_ingreso'=>['format_date'],
 					],
 ];
 
@@ -134,8 +136,8 @@ $fieldsToHeaderMap = [
 				'mes_cumple'=>'',
 				'dni'=>'', #custom
 				'estado'=>'',
-				'fecha_de_ingreso'=>'Date | Employment',
-				'fecha_de_nacimiento'=>'Date | Birthday',
+				'fecha_de_ingreso'=>'Date | Employment', #format date
+				'fecha_de_nacimiento'=>'Date | Birthday', #format date
 				'first_name'=>'First Name',
 				'last_name'=>'Last Name',
 				'lugar_de_trabajo'=>'Organization',
@@ -379,6 +381,14 @@ function format_field_value($field, $row)
 												{
 													$value = 'UNDEFINED';
 												}
+										}
+										break;						
+
+				case 'format_date':
+										if($value!='')
+										{
+											$valueArr = explode('/', $value);	
+											$value = date('Y-m-d', mktime(0,0,0,$valueArr[1], $valueArr[0], $valueArr[2]));
 										}
 										break;						
 			}
