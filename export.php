@@ -111,10 +111,9 @@ $fieldsToExport = [
 						'description'=>['lowercase','capitalize'],
 						'first_name'=>['lowercase','capitalize'],
 						'last_name'=>['lowercase','capitalize'],
-						'lugar_de_trabajo'=>['lowercase','capitalize'],
+						'lugar_de_trabajo'=>['setLugardeTrabajo'],
 						'posicion'=>['lowercase','capitalize'],
 						'user_email'=>['fillblankemailaddress'],
-						'lugar_de_trabajo'=>['setLugardeTrabajo'],
 						'fecha_de_nacimiento'=>['format_date'],
 						'fecha_de_ingreso'=>['format_date'],
 					],
@@ -123,29 +122,31 @@ $fieldsToExport = [
 # Plugin Connections > fields map
 $fieldsToHeaderMap = [
                 'entry_type'=>'Entry Type',
-				'ID'=>'user', #custom upload
-				'user_login'=>'',
-				'user_email'=>'Email | Work Email',
-				'user_nicename'=>'',
-				'user_registered'=>'',
-				'status'=>'',
-				'display_name'=>'',
+				'ID'=>'user', #custom upload (this ID does the link with WP user)
+				#'user_login'=>'',
+				'user_email'=>'Email | Email Trabajo',
+				#'user_nicename'=>'',
+				#'user_registered'=>'',
+				#'status'=>'',
+				#'display_name'=>'',
 				'departamento'=>'Department',
 				'description'=>'Biography',
-				'dia_cumple'=>'',
-				'mes_cumple'=>'',
-				'dni'=>'', #custom
-				'estado'=>'',
-				'fecha_de_ingreso'=>'Date | Employment', #format date
-				'fecha_de_nacimiento'=>'Date | Birthday', #format date
+				#'dia_cumple'=>'',
+				#'mes_cumple'=>'',
+				'dni'=>'DNI', #custom upload
+				#'estado'=>'',
+				'fecha_de_ingreso'=>'Date | Empleo', #format date
+				'fecha_de_nacimiento'=>utf8_decode('Date | Cumpleaños'), #format date
 				'first_name'=>'First Name',
 				'last_name'=>'Last Name',
-				'lugar_de_trabajo'=>'Organization',
-				'nickname'=>'',
+				#'lugar_de_trabajo'=>'',
+				#'nickname'=>'',
 				'posicion'=>'Title',
-				'telefono'=>'Phone | Work Phone',
-				'user_avatar'=>'', #custom upload
+				'telefono'=>utf8_decode('Phone | Teléfono Trabajo'),
+				#'user_avatar'=>'', #custom upload
 				'visibility'=>'Visibility',
+				'categories'=>'Categories',
+				'organization'=>'Organization',
 ];
 
 # Special chars
@@ -299,7 +300,9 @@ foreach($result->users as $userid=>&$user)
 {
 	$user['entry_type'] = 'individual';
 	$user['visibility'] = 'public';
-	$user['categories'] = $user['lugar_de_trabajo'];
+	$user['categories'] = $categories['definidas'][$user['lugar_de_trabajo']];
+	$user['organization'] = $categories['definidas'][$user['lugar_de_trabajo']];
+
 }
 
 
@@ -360,7 +363,8 @@ function format_field_value($field, $row)
 									break;
 
 				case 'fillblankemailaddress':
-									if($value!='')
+									$value = trim($value);
+									if($value=='')
 									{	
 										$defaultuser = $row['dni'];
 										$defaultdomain = '@email.com';
@@ -375,7 +379,7 @@ function format_field_value($field, $row)
 											if(array_key_exists($value, $categories['variantes']))
 											{
 												$catslug = $categories['variantes'][$value];
-												$value = $categories['definidas'][$catslug];
+												$value = $catslug;
 											}
 											else
 												{
@@ -388,7 +392,7 @@ function format_field_value($field, $row)
 										if($value!='')
 										{
 											$valueArr = explode('/', $value);	
-											$value = date('Y-m-d', mktime(0,0,0,$valueArr[1], $valueArr[0], $valueArr[2]));
+											$value = date('d/m/Y', mktime(0,0,0,$valueArr[1], $valueArr[0], $valueArr[2]));
 										}
 										break;						
 			}
@@ -413,7 +417,7 @@ $userrow = array_pop($result->users);
 
 foreach($userrow as $field=>$value)
 {
-	$headers[] = $field;
+	$headers[] = isset($fieldsToHeaderMap[$field]) ? $fieldsToHeaderMap[$field] : $field;
 }
 
 $file = fopen(date('Y-m-d').'_all_users_exported.csv', 'w');
