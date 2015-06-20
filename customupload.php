@@ -33,12 +33,9 @@ $q_connections = "SELECT
 						bio,
 						notes,
 						options,
-						user,						
-						cm.meta_value AS dni
+						user
 					FROM
 			    		re5gu_connections AS c
-			    	LEFT OUTER JOIN 
-			    		re5gu_connections_meta AS cm ON c.id = cm.entry_id
 			     ";
 
 ############################################################################
@@ -226,9 +223,7 @@ function setConnection_imageAvatar($id)
 					],
 			],
 		];
-		# set
-		var_dump($imageArr);
-
+		$result->connections[$id]['_options']['image'] = $imageArr;
 	}	
 }
 
@@ -287,7 +282,16 @@ function copyimagetofolder($file, $path, $info, $userslug)
 	{
 		$source = $path.$file;
 		$destinationpath = ABSPATH.CONNIMAGEPATH.$userslug;
-		if(mkdir($destinationpath, 0750))
+		$direxists = false;
+		if(file_exists($destinationpath) == false)
+		{
+			$direxists = mkdir($destinationpath, 0750);
+		}
+		else
+			{
+				$direxists = true;	
+			}
+		if($direxists)
 		{
 			$copied = copy($source, $destinationpath.'/'.$file);
 		}	
@@ -300,20 +304,23 @@ function copyimagetofolder($file, $path, $info, $userslug)
 # UPDATE DB > RESULT CONNECTION 
 ############################################################################
 
-$customFieldsToInsert = [
-	#metakey #value
-	'dni'=>'dni',
-];
-
 $DBfieldsToUpdate = [
 	'user'=>'user',
 	'notes'=>'notes',
-
+	'options'=>'options',
 ];
+# serialize field '_options' and set to connections
+foreach($result->connections as $connid=>&$conn)
+{
+	$conn['options'] = serialize($conn['_options']);
+}
 
 if($_POST && $_POST['action'])
 {
 	var_dump($_POST);
+
+
+
 }
 
 
@@ -391,9 +398,10 @@ var_dump($result);
 		<th>Nombre/Apellido</th>
 		<th>Organization</th>
 		<th></th>
-		<th>wpuserid</th>
-		<th>dni</th>
+		<th>user</th>
+		<th>notes</th>
 		<th>options</th>
+		<th></th>
 	</thead>	
 	<?php foreach($result->raw as $id=>$conn): ?>
 
@@ -402,9 +410,9 @@ var_dump($result);
 			<td><?php echo $conn['first_name']; ?> <?php $conn['last_name']; ?></td>
 			<td><?php echo $conn['organization']; ?></td>
 			<td></td>
-			<td><?php echo $conn['user']; ?></td>
-			<td><?php echo $conn['dni']; ?></td>
-			<td class="thopt"><?php echo $conn['options']; ?></td>
+			<td><?php echo $result->connections[$id]['user']; ?></td>
+			<td><?php echo $result->connections[$id]['notes']; ?></td>
+			<td class="thopt"><?php echo $result->connections[$id]['options']; ?></td>
 		</tr>	
 
 	<?php endforeach; ?>
