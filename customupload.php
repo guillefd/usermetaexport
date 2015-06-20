@@ -287,7 +287,7 @@ function copyimagetofolder($file, $path, $info, $userslug)
 	{
 		$source = $path.$file;
 		$destinationpath = ABSPATH.CONNIMAGEPATH.$userslug;
-		if(mkdir($destinationpath, 0777))
+		if(mkdir($destinationpath, 0750))
 		{
 			$copied = copy($source, $destinationpath.'/'.$file);
 		}	
