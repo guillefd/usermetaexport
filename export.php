@@ -147,6 +147,7 @@ $fieldsToHeaderMap = [
 				'visibility'=>'Visibility',
 				'categories'=>'Categories',
 				'organization'=>'Organization',
+				'notes'=>'Notes', # for use in next step
 ];
 
 # Special chars
@@ -302,7 +303,11 @@ foreach($result->users as $userid=>&$user)
 	$user['visibility'] = 'public';
 	$user['categories'] = $categories['definidas'][$user['lugar_de_trabajo']];
 	$user['organization'] = $categories['definidas'][$user['lugar_de_trabajo']];
-
+	
+	# data to be used in next Step > custom data (customupload.php)
+	$user['notes'] = 'wpuserid|'.$user['ID'].';'
+					.'useravatar|'.$user['user_avatar'].';'
+					.'dni|'.$user['dni'];
 }
 
 
