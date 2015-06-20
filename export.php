@@ -113,7 +113,7 @@ $fieldsToExport = [
 						'last_name'=>['lowercase','capitalize'],
 						'lugar_de_trabajo'=>['setLugardeTrabajo'],
 						'posicion'=>['lowercase','capitalize'],
-						'user_email'=>['fillblankemailaddress'],
+						#'user_email'=>['fillblankemailaddress'], 
 						'fecha_de_nacimiento'=>['format_date'],
 						'fecha_de_ingreso'=>['format_date'],
 					],
