@@ -1,118 +1,188 @@
+
+
 /* CONNECTIONS SLIM PLUS - template ------------------------------------------- */
 
 /*top buttons*/
 ul.cn-list-actions{
-	padding-left:1px!important;
+  padding-left:1px!important;
 }
 li.cn-list-action-item{
-	margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 li.cn-list-action-item a{
-	background-color:#ddd;
-  	padding:6px 12px;
-  	border-radius:3px;
-  	color: #666;
+  background-color:#ddd;
+    padding:6px 12px;
+    border-radius:3px;
+    color: #666;
 }
 li.cn-list-action-item a:hover{
-	background: #999;
+  background: #999;
     color:#fff;
 }
 
+li.cn-entry-action-item{
+  margin-bottom: 15px;
+}
+li.cn-entry-action-item a{
+  background-color:#ddd;
+    padding:6px 12px;
+    border-radius:3px;
+    color: #666;
+}
+li.cn-entry-action-item a:hover{
+  background: #999;
+    color:#fff;
+}
+
+
 /*messages*/
 #cn-search-messages{
-  	border:1px solid #ededed!important;
-	border-left:3px solid #79BB59!important;
-  	background:#fafafa;
+    border:1px solid #ededed!important;
+  border-left:3px solid #F1950C!important;
+    background:#fafafa;
     border-radius: 4px;
-  	color: #79BB59;
+    color: #F1950C;
 }
 #cn-search-messages #cn-clear-search a{
-	background-color: #79BB59;
-  	border-radius: 4px;
-  	padding-top: 6px;
+  background-color: #F1950C;
+    border-radius: 4px;
+    padding-top: 6px;
 }
 
 /*select box*/
 .chosen-container.chosen-container-single{
- 	width:250px!important;
+  width:250px!important;
     margin-top: 1px;
 }
 a.chosen-single,
 a.chosen-single.chosen-default{
-	height:35px!important;
-	padding-top:4px!important;
-  	font-size:15px!important;
-  	color: #666;
+  height:35px!important;
+  padding-top:4px!important;
+    font-size:15px!important;
+    color: #666;
 }
 
 /*search box*/
 span.cn-search{
-	float:none!important;
+  float:none!important;
     display: inline-block;
-  	vertical-align: top;
-  	margin-bottom: 15px!important;
+    vertical-align: top;
+    margin-bottom: 15px!important;
 }
 input#cn-search-input{
-	height:35px;
-  	width:320px!important;
+  height:35px;
+    width:320px!important;
     font-size: 15px;
 }
 input#cn-search-submit.cn-search-button{
-	height:35px;
+  height:35px;
 }
 /* letters link*/
 #cn-slim-plus .cn-alphaindex{
-	text-align:left!important;
+  text-align:left!important;
 }
 #cn-slim-plus a.cn-char{
-	padding: 5px 6px;
-  	background-color: #f2f2f2;
-  	color: #aaa;
-  	border-radius: 2px;	
+  padding: 5px 6px;
+    background-color: #f2f2f2;
+    color: #aaa;
+    border-radius: 2px; 
 }
 #cn-slim-plus a.cn-char:hover{
-	background:#999;
+  background:#999;
     color:#fff;  
 }
 
 /*list card*/
 .cn-list-row-alternate.vcard{
-	margin:5px 0;
+  margin:5px 0;
 }
 #cn-slim-plus #cn-list-body div div h3 a span{
-	text-transform:none!important;
-	color: #555;  	
+  text-transform:none!important;
+  color: #555;    
     font-weight:normal!important;
 }
 #cn-slim-plus #cn-list-body div div h3 a span.cn-sprite{
-	background:#0b4396;
+  background:#0b4396;
 }
 .cn-detail.cn-clear.cn-hide{
-	padding-top:25px!important;
+  padding-top:25px!important;
 }
 
 /*pagination*/
 #cn-page-nav{
-	margin-top:45px;
-	margin-bottom:35px;
+  margin-top:45px;
+  margin-bottom:35px;
 }
 #cn-page-nav span.page-numbers.current{
-	background:#0b4396!important;
-  	color:#fff!important;
+  background:#0b4396!important;
+    color:#fff!important;
 }
 #cn-page-nav a.page-numbers{
-	padding: 5px 10px!important;
-  	border:none!important;
-  	font-size: 15px;
+  padding: 5px 10px!important;
+    border:none!important;
+    font-size: 15px;
 }
 #cn-page-nav a.page-numbers:hover{
-	background:#999;
+  background:#999;
     color:#fff!important;
 }
 #cn-page-nav span.page-numbers{
-	padding: 5px 10px!important;
-  	border:none!important;
-  	font-size: 15px;
+  padding: 5px 10px!important;
+    border:none!important;
+    font-size: 15px;
+}
+
+#cn-list-foot{
+  margin-bottom:35px;
 }
 
 /* END >> CONNECTIONS SLIM PLUS - template */
+
+
+
+/* CONNECTIONS FORM - ------------------------------------- */
+
+#cn-form .cn-metabox {
+  box-shadow:none!important;
+}
+
+#cn-form .cn-button{
+  width:300px;
+    height:35px;  
+    border:none!important;
+    line-height: 1.75em;
+}
+#cn-form .cn-remove.cn-button{
+  width:100px;
+}
+#cn-form .cn-button.green{
+  margin:25px auto;
+}
+
+
+#cn-name-prefix,
+#cn-name-middle,
+#cn-name-suffix,
+#cn-metabox-visibility{
+  display:none!important;
+}
+
+#cn-metabox-name input[type="text"]{
+  height:35px;
+}
+
+#cn-metabox-section-name{
+  margin-top:15px;
+}
+#cn-metabox-section-title{
+  margin-top:15px;
+}
+#cn-metabox-section-organization{
+  margin-top:15px;
+}
+#cn-metabox-section-department{
+  margin-top:15px;
+}
+
+
+/* END >> CONNECTIONS FORM - form */
