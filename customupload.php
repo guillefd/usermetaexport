@@ -1,5 +1,7 @@
 <?php
 
+ini_set('max_execution_time', 600); 
+
 # get db data
 require_once('../wp-config.php');
 
@@ -15,6 +17,7 @@ $result = new stdClass();
 $result->counts = [];
 $result->connections = [];
 $result->raw = [];
+$result->updatedata = [];
 
 $q_connections = "SELECT 
 						id,
@@ -315,11 +318,32 @@ foreach($result->connections as $connid=>&$conn)
 	$conn['options'] = serialize($conn['_options']);
 }
 
+# set array data update
+foreach($result->connections as $connid=>$conn)
+{
+	$result->updatedata[] = [
+								'data'=>[
+									'user'=>$conn['user'],
+									'notes'=>$conn['notes'],
+									'options'=>$conn['options'],
+								],
+								'where'=>[
+									'id'=>$connid,
+								],
+						];
+}
+
+# RUN UPDATE
 if($_POST && $_POST['action'])
 {
-	var_dump($_POST);
+	# use WP database global object
+	global $wpdb;
 
-
+	# update
+	foreach($result->updatedata as &$row)
+	{
+		$row['result'] = $wpdb->update('re5gu_connections', $row['data'], $row['where']);
+	}	
 
 }
 
@@ -335,7 +359,6 @@ if($_POST && $_POST['action'])
 ini_set('xdebug.var_display_max_depth', 10);
 ini_set('xdebug.var_display_max_children', 256);
 ini_set('xdebug.var_display_max_data', 1024);
-
 var_dump($result);
 
 ?>
