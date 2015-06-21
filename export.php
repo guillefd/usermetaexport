@@ -1,5 +1,10 @@
 <?php
 
+ini_set('max_execution_time', 1200); 
+ini_set('xdebug.var_display_max_depth', 10);
+ini_set('xdebug.var_display_max_children', 256);
+ini_set('xdebug.var_display_max_data', 1024);
+
 # get db data
 require_once('../wp-config.php');
 
@@ -106,13 +111,13 @@ $fieldsToExport = [
 						'user_avatar'
 					],
 					'fields_to_format'=>[
-						'display_name'=>['lowercase','capitalize'],
-						'departamento'=>['lowercase','capitalize','lowercaseSpecialChar'],
-						'description'=>['lowercase','capitalize'],
-						'first_name'=>['lowercase','capitalize'],
-						'last_name'=>['lowercase','capitalize'],
+						'display_name'=>['lowercase','lowercaseSpecialChar','capitalize'],
+						'departamento'=>['lowercase','lowercaseSpecialChar','capitalize'],
+						'description'=>['lowercase','lowercaseSpecialChar','capitalize','cleanlinebreaks'],
+						'first_name'=>['lowercase','lowercaseSpecialChar','capitalize'],
+						'last_name'=>['lowercase','lowercaseSpecialChar','capitalize'],
 						'lugar_de_trabajo'=>['setLugardeTrabajo'],
-						'posicion'=>['lowercase','capitalize'],
+						'posicion'=>['lowercase','lowercaseSpecialChar','capitalize'],
 						#'user_email'=>['fillblankemailaddress'], 
 						'fecha_de_nacimiento'=>['format_date'],
 						'fecha_de_ingreso'=>['format_date'],
@@ -302,8 +307,8 @@ foreach($result->users as $userid=>&$user)
 {
 	$user['entry_type'] = 'individual';
 	$user['visibility'] = 'public';
-	$user['categories'] = $categories['definidas'][$user['lugar_de_trabajo']];
-	$user['organization'] = $categories['definidas'][$user['lugar_de_trabajo']];
+	$user['categories'] = utf8_decode($categories['definidas'][$user['lugar_de_trabajo']]);
+	$user['organization'] = utf8_decode($categories['definidas'][$user['lugar_de_trabajo']]);
 	
 	# data to be used in next Step > custom data (customupload.php)
 	$user['notes'] = 'wpuserid@'.$user['ID'].'|'
@@ -401,12 +406,20 @@ function format_field_value($field, $row)
 											$value = date('m/d/Y', mktime(0,0,0,$valueArr[1], $valueArr[0], $valueArr[2]));
 										}
 										break;						
+
+				case 'cleanlinebreaks':						
+										$value = trim($value);
+										if($value!='')
+										{
+											$value = preg_replace( "/\r|\n/", " ", $value);
+											$value = preg_replace( "!\s+!", " ", $value);
+										}
+										break;
 			}
 		}	
 	}
 	return $value;
 }
-
 
 //////////// WRITE CSV ////////////
 
@@ -416,7 +429,13 @@ foreach($result->users as $user)
 {
 	if(is_array($user))
 	{
-		$list[] = $user;
+		$row = [];
+		foreach($user as $field=>$value)
+		{
+			$value = str_replace('"','""',$value);
+			$row[] = $value;
+		}
+		$list[] = $row;
 	}	
 }
 $userrow = array_pop($result->users);
@@ -438,28 +457,28 @@ fclose($filecsv);
 
 //////////// WRITE TXT ////////////
 
-$headers = [];
-$list = [];
-$lines = '';
-foreach($result->users as $user)
-{
-	foreach($user as $field=>$value)
-	{
-		$lines.= '"'.$value.'",';
-	}	
-	$lines.="\n";
-}
+// $headers = [];
+// $list = [];
+// $lines = '';
+// foreach($result->users as $user)
+// {
+// 	foreach($user as $field=>$value)
+// 	{
+// 		$lines.= '"'.$value.'",';
+// 	}	
+// 	$lines.="\n";
+// }
 
-$header = '';
-foreach($userrow as $field=>$value)
-{
-	$header.= isset($fieldsToHeaderMap[$field]) ? '"'.$fieldsToHeaderMap[$field].'",' : '"'.$field.'",';
-}
+// $header = '';
+// foreach($userrow as $field=>$value)
+// {
+// 	$header.= isset($fieldsToHeaderMap[$field]) ? '"'.$fieldsToHeaderMap[$field].'",' : '"'.$field.'",';
+// }
 
-$filetxt = fopen(date('Y-m-d').'_all_users_exported.txt', 'w');
-fwrite($filetxt, $header);
-fwrite($filetxt, $lines);
-fclose($filetxt);
+// $filetxt = fopen(date('Y-m-d').'_all_users_exported.txt', 'w');
+// fwrite($filetxt, $header);
+// fwrite($filetxt, $lines);
+// fclose($filetxt);
 
 var_dump('users count', $result->userscount);
 var_dump('users extra count', $result->usersextracount);
