@@ -1,6 +1,6 @@
 <?php
 
-ini_set('max_execution_time', 600); 
+ini_set('max_execution_time', 1200); 
 ini_set('xdebug.var_display_max_depth', 10);
 ini_set('xdebug.var_display_max_children', 256);
 ini_set('xdebug.var_display_max_data', 1024);
@@ -117,10 +117,10 @@ function setResultConnection($row)
 					case 'explodevalue':
 									if($value!='')
 									{
-										$explodedfields = explode(';', $value);
+										$explodedfields = explode('|', $value);
 										foreach($explodedfields as $rawfield)
 										{								
-											$arr = explode('|', $rawfield);
+											$arr = explode('@', $rawfield);
 											$connection[$arr[0]] = $arr[1];
 										}
 									}	
@@ -421,7 +421,7 @@ if($_POST && $_POST['action'])
 		<th>user</th>
 		<th>notes</th>
 		<th>options</th>
-		<th></th>
+		<th>updated</th>
 	</thead>	
 	<?php foreach($result->raw as $id=>$conn): ?>
 
@@ -433,6 +433,7 @@ if($_POST && $_POST['action'])
 			<td><?php echo $result->connections[$id]['user']; ?></td>
 			<td><?php echo $result->connections[$id]['notes']; ?></td>
 			<td class="thopt"><?php echo $result->connections[$id]['options']; ?></td>
+			<td><?php echo $result->updatedata[$id]['result']; ?></td>
 		</tr>	
 
 	<?php endforeach; ?>

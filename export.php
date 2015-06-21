@@ -305,9 +305,9 @@ foreach($result->users as $userid=>&$user)
 	$user['organization'] = $categories['definidas'][$user['lugar_de_trabajo']];
 	
 	# data to be used in next Step > custom data (customupload.php)
-	$user['notes'] = 'wpuserid|'.$user['ID'].';'
-					.'useravatar|'.$user['user_avatar'].';'
-					.'dni|'.$user['dni'];
+	$user['notes'] = 'wpuserid@'.$user['ID'].'|'
+					.'useravatar@'.$user['user_avatar'].'|'
+					.'dni@'.$user['dni'];
 }
 
 
