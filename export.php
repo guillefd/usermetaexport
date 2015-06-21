@@ -425,17 +425,40 @@ foreach($userrow as $field=>$value)
 	$headers[] = isset($fieldsToHeaderMap[$field]) ? $fieldsToHeaderMap[$field] : $field;
 }
 
-$file = fopen(date('Y-m-d').'_all_users_exported.csv', 'w');
-
+$filecsv = fopen(date('Y-m-d').'_all_users_exported.csv', 'w');
 # write headers
-fputcsv($file, $headers);
-
+fputcsv($filecsv, $headers);
 # write values
 foreach($list as $fields) 
 {
-    fputcsv($file, $fields);
+    fputcsv($filecsv, $fields);
 }
-fclose($file);
+fclose($filecsv);
+
+//////////// WRITE TXT ////////////
+
+$headers = [];
+$list = [];
+$lines = '';
+foreach($result->users as $user)
+{
+	foreach($user as $field=>$value)
+	{
+		$lines.= '"'.$value.'",';
+	}	
+	$lines.='\n';
+}
+
+$header = '';
+foreach($userrow as $field=>$value)
+{
+	$header.= isset($fieldsToHeaderMap[$field]) ? '"'.$fieldsToHeaderMap[$field].'",' : '"'.$field.'",';
+}
+
+$filetxt = fopen(date('Y-m-d').'_all_users_exported.txt', 'w');
+fwrite($filetxt, $header);
+fwrite($filetxt, $lines);
+fclose($filetxt);
 
 var_dump('users count', $result->userscount);
 var_dump('users extra count', $result->usersextracount);
@@ -493,7 +516,7 @@ var_dump($result->users);
 			<?php echo '"'.$value.'"'; ?>
 			<?php 
 					$fcount++;
-					if($fcount<$fields) echo ', '; 
+					if($fcount<=$fields) echo ', '; 
 			?>
 
 		<?php endforeach; ?>
