@@ -21,6 +21,7 @@ $result->counts = [];
 $result->connections = [];
 $result->raw = [];
 $result->updatedata = [];
+$result->insertdata = [];
 
 $q_connections = "SELECT 
 						id,
@@ -307,7 +308,7 @@ function copyimagetofolder($file, $path, $info, $userslug)
 
 
 ############################################################################
-# 5 - UPDATE DB > RESULT CONNECTION 
+# 5 - UPDATE/INSERT DB > RESULT CONNECTION 
 ############################################################################
 
 # serialize field '_options' and set to connections
@@ -316,15 +317,16 @@ foreach($result->connections as $connid=>$conn)
 	$result->connections[$connid]['options'] = serialize($conn['_options']);
 }
 
-# set array data update
+# SET UPDATE ARRAY
+# updates connections table
 $updatedata = [];
 foreach($result->connections as $conn)
 {
 	$updatedata[] = [
 					'data'=>[
-						'user'=>$conn['user'],
-						'notes'=>$conn['notes'],
-						'options'=>$conn['options'],
+						'user'=>$conn['user'], # set user for link with wp user
+						'notes'=>$conn['notes'], # set blank
+						'options'=>$conn['options'], # if exist, added image
 					],
 					'where'=>[
 						'id'=>$conn['id'],
@@ -333,20 +335,43 @@ foreach($result->connections as $conn)
 }
 $result->updatedata = $updatedata;
 
+# SET INSERT ARRAY
+# insert usermeta for linking wpuser with connection entry
+$insertdata = [];
+foreach($result->connections as $conn)
+{
+	$insertdata[] = [
+					'data'=>[
+						'user_id'=>$conn['user'], #wp user id
+						'meta_key'=>'connections_entry_id',
+						'meta_value'=>$conn['id'], #entryid
+					],
+	];
+}
+$result->insertdata = $insertdata;
 
-# RUN UPDATE
+
+# RUN UPDATE/INSERT
 if($_POST && $_POST['action'])
 {
 	# use WP database global object
 	global $wpdb;
 
-	# update
+	# updates
 	foreach($result->updatedata as &$row)
 	{
 		$row['result'] = $wpdb->update('re5gu_connections', $row['data'], $row['where']);
 	}	
 
+	# inserts
+	foreach($result->insertdata as &$row)
+	{
+		$row['result'] = $wpdb->insert('re5gu_usermeta', $row['data']);
+	}
+
 }
+
+
 
 
 
@@ -422,6 +447,7 @@ if($_POST && $_POST['action'])
 		<th>notes</th>
 		<th>options</th>
 		<th>updated</th>
+		<th>inserted</th>
 	</thead>	
 	<?php foreach($result->raw as $id=>$conn): ?>
 
@@ -434,6 +460,7 @@ if($_POST && $_POST['action'])
 			<td><?php echo $result->connections[$id]['notes']; ?></td>
 			<td class="thopt"><?php echo $result->connections[$id]['options']; ?></td>
 			<td><?php echo $result->updatedata[$id]['result']; ?></td>
+			<td><?php echo $result->insertdata[$id]['result']; ?></td>
 		</tr>	
 
 	<?php endforeach; ?>
