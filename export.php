@@ -302,9 +302,10 @@ else
 		}		
 	}
 
-# add custom data
+# add custom data and fix blank data
 foreach($result->users as $userid=>&$user)
 {
+	# CUSTOM DATA
 	$user['entry_type'] = 'individual';
 	$user['visibility'] = 'public';
 	$user['categories'] = utf8_decode($categories['definidas'][$user['lugar_de_trabajo']]);
@@ -314,6 +315,16 @@ foreach($result->users as $userid=>&$user)
 	$user['notes'] = 'wpuserid@'.$user['ID'].'|'
 					.'useravatar@'.$user['user_avatar'].'|'
 					.'dni@'.$user['dni'];
+
+	# BLANK DATA
+	trim($user['first_name']);
+	trim($user['last_name']);
+	if($user['first_name']=='' && $user['last_name']=='' 
+		|| $user['first_name']=='')
+	{
+		$user['first_name'] = $user['display_name'];
+		$user['last_name'] = '';
+	}				
 }
 
 
