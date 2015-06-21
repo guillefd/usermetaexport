@@ -1,6 +1,9 @@
 <?php
 
 ini_set('max_execution_time', 600); 
+ini_set('xdebug.var_display_max_depth', 10);
+ini_set('xdebug.var_display_max_children', 256);
+ini_set('xdebug.var_display_max_data', 1024);
 
 # get db data
 require_once('../wp-config.php');
@@ -42,7 +45,7 @@ $q_connections = "SELECT
 			     ";
 
 ############################################################################
-# 2 - CONNECT AND SET DATA
+# 2 - CONNECT DB AND RUN QUERY
 ############################################################################
 
 # connect
@@ -82,9 +85,9 @@ else
 		$connections->data_seek(0);
 		while($row = $connections->fetch_assoc())
 		{
-			$id = $row['id'];
+			$rowid = $row['id'];
 			# save raw
-			$result->raw[$id] = $row;		
+			$result->raw[$rowid] = $row;		
 			# set connection
 			setResultConnection($row);
 			$result->counts['connections']++;
@@ -97,7 +100,7 @@ function setResultConnection($row)
 	global $fieldsToFormat;
 	
 	$connection = [];
-	$id = $row['id'];
+	$rid = $row['id'];
 	foreach($row as $field=>$value)
 	{
 		if(array_key_exists($field, $fieldsToFormat))
@@ -130,11 +133,12 @@ function setResultConnection($row)
 			}	
 		}
 	}
-	$result->connections[$id] = $connection;
+	$result->connections[$rid] = $connection;
 }
 
+
 ############################################################################
-# UPDATE CONNECTIONS VALUES
+# 4 - UPDATE CONNECTIONS VALUES
 ############################################################################
 
 $connectionfieldsToUpdate = [
@@ -147,24 +151,23 @@ $connectionfieldsToUpdate = [
 # set connection fields to update
 foreach($result->connections as $connID=>$conn)
 {
-	foreach($conn as $field=>&$value)
+	foreach($conn as $field=>$value)
 	{
 		if(array_key_exists($field, $connectionfieldsToUpdate))
 		{
-			$connid = $conn['id'];
 			$function = $connectionfieldsToUpdate[$field];
 			switch($function)
 			{
 				case 'linkwithWPuser':
-										setConnection_wpuserid($connid);
+										setConnection_wpuserid($connID);
 										break;
 
 				case 'setUserimage':
-										setConnection_imageAvatar($connid);
+										setConnection_imageAvatar($connID);
 										break;
 
 				case 'blank':
-										$result->connections[$connid][$field] = '';
+										$result->connections[$connID][$field] = '';
 										break;
 			}
 		}
@@ -304,34 +307,32 @@ function copyimagetofolder($file, $path, $info, $userslug)
 
 
 ############################################################################
-# UPDATE DB > RESULT CONNECTION 
+# 5 - UPDATE DB > RESULT CONNECTION 
 ############################################################################
 
-$DBfieldsToUpdate = [
-	'user'=>'user',
-	'notes'=>'notes',
-	'options'=>'options',
-];
 # serialize field '_options' and set to connections
-foreach($result->connections as $connid=>&$conn)
+foreach($result->connections as $connid=>$conn)
 {
-	$conn['options'] = serialize($conn['_options']);
+	$result->connections[$connid]['options'] = serialize($conn['_options']);
 }
 
 # set array data update
-foreach($result->connections as $connid=>$conn)
+$updatedata = [];
+foreach($result->connections as $conn)
 {
-	$result->updatedata[] = [
-								'data'=>[
-									'user'=>$conn['user'],
-									'notes'=>$conn['notes'],
-									'options'=>$conn['options'],
-								],
-								'where'=>[
-									'id'=>$connid,
-								],
-						];
+	$updatedata[] = [
+					'data'=>[
+						'user'=>$conn['user'],
+						'notes'=>$conn['notes'],
+						'options'=>$conn['options'],
+					],
+					'where'=>[
+						'id'=>$conn['id'],
+					],
+			];
 }
+$result->updatedata = $updatedata;
+
 
 # RUN UPDATE
 if($_POST && $_POST['action'])
@@ -355,11 +356,7 @@ if($_POST && $_POST['action'])
 # PRINT 
 ############################################################################
 
-
-ini_set('xdebug.var_display_max_depth', 10);
-ini_set('xdebug.var_display_max_children', 256);
-ini_set('xdebug.var_display_max_data', 1024);
-var_dump($result);
+#var_dump($result);
 
 ?>
 
