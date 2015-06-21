@@ -266,7 +266,7 @@ function extract_useravatar_filepath($filename, $useravataruri)
 function getFileInfo($file, $path)
 {
 	$info = false;
-	if($file && $path)
+	if($file && $path && file_exists($path.$file))
 	{
 		# get size
 		$size = getimagesize($path.$file);
@@ -297,7 +297,7 @@ function copyimagetofolder($file, $path, $info, $userslug)
 			{
 				$direxists = true;	
 			}
-		if($direxists)
+		if($direxists && file_exists($source))
 		{
 			$copied = copy($source, $destinationpath.'/'.$file);
 		}	

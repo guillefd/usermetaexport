@@ -157,6 +157,7 @@ $specialCharMap = [
 					'Í'=>'í',
 					'Ó'=>'ó',
 					'Ú'=>'ú',
+					'Ñ'=>'ñ',
 ];
 
 $categories = [
@@ -446,7 +447,7 @@ foreach($result->users as $user)
 	{
 		$lines.= '"'.$value.'",';
 	}	
-	$lines.='\n';
+	$lines.="\n";
 }
 
 $header = '';
