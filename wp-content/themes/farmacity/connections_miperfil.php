@@ -30,7 +30,7 @@ if($connid)
 							<a href="'.site_url().'/directorio/name/'.$entryslug.'/edit/"><i class="fa fa-edit"></i> Editar</a>
 						</li>
 					</ul>';
-		$shortcode = "[connections id='".$connid."' show_alphaindex=FALSE]";			
+		$shortcode = "[connections id='".$connid."' template='slim-plus' show_alphaindex=FALSE enable_search=FALSE enable_category_select=FALSE]";			
 	}
 	else
 		{
@@ -57,6 +57,12 @@ echo '<div style="margin:10px 20px;">';
 		echo do_shortcode($shortcode);
 	echo '</div>';
 echo '</div>';
+
 get_footer();
 
 ?>
+<script>
+	$(document).ready(function(){
+		$('.cn-detail.cn-clear.cn-hide').css('display','block');
+	});
+</script>
