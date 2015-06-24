@@ -27,8 +27,8 @@
 
 	echo '<h3 class="cn-accordion-item" data-div-id="cn-detail-' , $uuid , '"' , ' style="border-bottom: ' , $atts['color'] , ' 1px solid; color:' , $atts['color'] , ';"><span class="cn-sprite' . $open . '" style="background-color: ' , $atts['color'] , ';"></span>' , $entry->getNameBlock( array( 'format' => $atts['name_format'] ) ) , '</h3>';
 
+	# override options > always CN-SHOW
 	#in_array( 'show', $categories ) ? $show = ' cn-show' : $show = ' cn-hide';
-
 	$show = 'cn-show';
 
 	echo '<div class="cn-detail cn-clear' . $show . '" id="cn-detail-' , $uuid , '">';
@@ -37,8 +37,8 @@
 
 			$entry->getImage( array(
 				'image'    => $atts['image'],
-				'height'   => 120,
-				'width'    => 100,
+				'height'   => 375,
+				'width'    => 250,
 				'fallback' => array(
 					'type'     => $atts['image_fallback'],
 					'string'   => $atts['str_image']

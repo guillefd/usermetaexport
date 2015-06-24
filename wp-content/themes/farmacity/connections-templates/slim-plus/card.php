@@ -27,8 +27,8 @@
 
 			$entry->getImage( array(
 				'image'    => $atts['image'],
-				'height'   => 120,
-				'width'    => 100,
+				'height'   => 375,
+				'width'    => 250,
 				'fallback' => array(
 					'type'     => $atts['image_fallback'],
 					'string'   => $atts['str_image']
@@ -40,7 +40,9 @@
 
 		echo '<div class="cn-right">';
 
-			if ( $atts['show_title'] )$entry->getTitleBlock();
+			echo '<h2>'.$entry->getName().'</h2>';
+
+			if ( $atts['show_title'] )$entry->getTitle();
 
 			if ( $atts['show_org'] ) $entry->getOrgUnitBlock();
 

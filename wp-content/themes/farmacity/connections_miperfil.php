@@ -30,7 +30,7 @@ if($connid)
 							<a href="'.site_url().'/directorio/name/'.$entryslug.'/edit/"><i class="fa fa-edit"></i> Editar</a>
 						</li>
 					</ul>';
-		$shortcode = "[connections id='".$connid."' template='slim-plus' show_alphaindex=FALSE enable_search=FALSE enable_category_select=FALSE]";			
+		$shortcode = "[connections id='".$connid."' template='slim-plus' show_alphaindex=FALSE enable_search=FALSE show_dates=FALSE enable_category_select=FALSE str_bio_head='Biografía']";			
 	}
 	else
 		{
